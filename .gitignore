@@ -7,3 +7,7 @@ node_modules/
 .env
 /playwright/.cache/
 /playwright/.auth/
+allure-results/
+allure-report/
+allure-history-dir/
+gh-pages-dir/
