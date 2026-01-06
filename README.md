@@ -16,6 +16,9 @@ This project automates mobile web testing for both **iOS** and **Android** using
 You can view the latest test results here:  
 👉 **[View Allure Report](https://reynaldiakbarr.github.io/PlaywrightAutomation/)**
 
+You can view the evidence of telegram notification here:
+👉 **[View Telegram Notification](https://drive.google.com/file/d/1zaK-EecPoQXqAGW7W-AHCOeGydz3sGi3/view?usp=sharing)**
+
 ## 🛠️ Tech Stack
 * **Language:** TypeScript
 * **Framework:** Playwright
