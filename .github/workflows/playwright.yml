@@ -60,7 +60,7 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: allure-history-dir
         publish_branch: gh-pages
-
+        
     # --- BAGIAN NOTIFIKASI TELEGRAM ---
 
     - name: Send Telegram Notification
@@ -69,14 +69,22 @@ jobs:
         BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       run: |
-        # Mengambil data dari Allure summary
-        PASSED=$(jq '.statistic.passed' allure-history-dir/widgets/summary.json)
-        FAILED=$(jq '.statistic.failed' allure-history-dir/widgets/summary.json)
-        SKIPPED=$(jq '.statistic.skipped' allure-history-dir/widgets/summary.json)
-        TOTAL=$(jq '.statistic.total' allure-history-dir/widgets/summary.json)
+        # Cari file summary.json secara dinamis di seluruh direktori kerja
+        SUMMARY_FILE=$(find . -name "summary.json" | grep "widgets/summary.json" | head -n 1)
+
+        if [ -f "$SUMMARY_FILE" ]; then
+          echo "File found at: $SUMMARY_FILE"
+          PASSED=$(jq '.statistic.passed // 0' "$SUMMARY_FILE")
+          FAILED=$(jq '.statistic.failed // 0' "$SUMMARY_FILE")
+          SKIPPED=$(jq '.statistic.skipped // 0' "$SUMMARY_FILE")
+          TOTAL=$(jq '.statistic.total // 0' "$SUMMARY_FILE")
+        else
+          echo "Warning: summary.json not found. Using default values."
+          PASSED=0; FAILED=0; SKIPPED=0; TOTAL=0
+        fi
         
         # Menghitung persentase
-        if [ "$TOTAL" -gt 0 ]; then
+        if [ "$TOTAL" -ne 0 ]; then
           PASSED_PERCENT=$(( PASSED * 100 / TOTAL ))
           FAILED_PERCENT=$(( FAILED * 100 / TOTAL ))
         else
@@ -85,21 +93,25 @@ jobs:
         fi
 
         # Menentukan Emoji Status
-        if [ "$FAILED" -eq 0 ]; then STATUS_EMOJI="✅"; else STATUS_EMOJI="❌"; fi
+        if [ "$FAILED" -eq 0 ] && [ "$TOTAL" -gt 0 ]; then 
+          STATUS_EMOJI="✅"
+        else 
+          STATUS_EMOJI="❌" 
+        fi
 
         REPORT_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
         
-        MESSAGE="$STATUS_EMOJI *Allure Test Report* $STATUS_EMOJI%0A%0A"
+        MESSAGE="${STATUS_EMOJI} *Allure Test Report* ${STATUS_EMOJI}%0A%0A"
         MESSAGE+="📊 *Summary:*%0A"
-        MESSAGE+="• Total Tests: $TOTAL%0A"
-        MESSAGE+="• Passed: $PASSED ($PASSED_PERCENT%)%0A"
-        MESSAGE+="• Failed: $FAILED ($FAILED_PERCENT%)%0A"
-        MESSAGE+="• Skipped: $SKIPPED%0A%0A"
-        MESSAGE+="🌐 *Full Report:* [Click Here]($REPORT_URL)"
+        MESSAGE+="• Total Tests: ${TOTAL}%0A"
+        MESSAGE+="• Passed: ${PASSED} (${PASSED_PERCENT}%)%0A"
+        MESSAGE+="• Failed: ${FAILED} (${FAILED_PERCENT}%)%0A"
+        MESSAGE+="• Skipped: ${SKIPPED}%0A%0A"
+        MESSAGE+="🌐 *Full Report:* [Click Here](${REPORT_URL})"
         
-        curl -s -X POST https://api.telegram.org/bot$BOT_TOKEN/sendMessage \
-          -d chat_id=$CHAT_ID \
-          -d text="$MESSAGE" \
+        curl -s -X POST https://api.telegram.org/bot${BOT_TOKEN}/sendMessage \
+          -d chat_id=${CHAT_ID} \
+          -d text="${MESSAGE}" \
           -d parse_mode="Markdown"
 
     # Tetap simpan artifact standar sebagai backup
