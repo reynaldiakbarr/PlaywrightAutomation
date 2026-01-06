@@ -69,8 +69,33 @@ jobs:
         BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       run: |
+        # Mengambil data dari Allure summary
+        PASSED=$(jq '.statistic.passed' allure-history-dir/widgets/summary.json)
+        FAILED=$(jq '.statistic.failed' allure-history-dir/widgets/summary.json)
+        SKIPPED=$(jq '.statistic.skipped' allure-history-dir/widgets/summary.json)
+        TOTAL=$(jq '.statistic.total' allure-history-dir/widgets/summary.json)
+        
+        # Menghitung persentase
+        if [ "$TOTAL" -gt 0 ]; then
+          PASSED_PERCENT=$(( PASSED * 100 / TOTAL ))
+          FAILED_PERCENT=$(( FAILED * 100 / TOTAL ))
+        else
+          PASSED_PERCENT=0
+          FAILED_PERCENT=0
+        fi
+
+        # Menentukan Emoji Status
+        if [ "$FAILED" -eq 0 ]; then STATUS_EMOJI="✅"; else STATUS_EMOJI="❌"; fi
+
         REPORT_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
-        MESSAGE="🎭 *Allure Report Ready!* 🎭%0A%0A📊 Status: ${{ job.status }}%0A🌐 Link: $REPORT_URL"
+        
+        MESSAGE="$STATUS_EMOJI *Allure Test Report* $STATUS_EMOJI%0A%0A"
+        MESSAGE+="📊 *Summary:*%0A"
+        MESSAGE+="• Total Tests: $TOTAL%0A"
+        MESSAGE+="• Passed: $PASSED ($PASSED_PERCENT%)%0A"
+        MESSAGE+="• Failed: $FAILED ($FAILED_PERCENT%)%0A"
+        MESSAGE+="• Skipped: $SKIPPED%0A%0A"
+        MESSAGE+="🌐 *Full Report:* [Click Here]($REPORT_URL)"
         
         curl -s -X POST https://api.telegram.org/bot$BOT_TOKEN/sendMessage \
           -d chat_id=$CHAT_ID \
