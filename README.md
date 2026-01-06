@@ -2,7 +2,7 @@
 
 # 📱 Mobile and Web Automation with Playwright
 
-Goal: Automate the end-to-end user journey (Login -> Add to Cart -> Checkout).
+* **Goal:** Automate the end-to-end user journey (Login -> Add to Cart -> Checkout).
 This project automates mobile web testing for both **iOS** and **Android** using Playwright. It features a robust CI/CD pipeline that executes tests, generates comprehensive Allure Reports, and sends real-time updates to Telegram.
 
 ## 🚀 Key Features
