@@ -60,7 +60,7 @@ export default defineConfig({
 
     {
       name: 'iPhone 16',
-      testMatch: /.*Iphone.spec.ts/,
+      testMatch: /.*Iphone.spec.ts/i,
       outputDir: 'test-results/sauceIphoneVideo',
       use: {
         viewport: { width: 393, height: 852 },
@@ -74,7 +74,7 @@ export default defineConfig({
 
     {
       name: 'Samsung S25',
-      testMatch: /.*Android.spec.ts/,
+      testMatch: /.*Android.spec.ts/i,
       outputDir: 'test-results/sauceAndroidVideo',
       use: {
         viewport: { width: 360, height: 780 },

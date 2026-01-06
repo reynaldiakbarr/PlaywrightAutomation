@@ -32,6 +32,9 @@ jobs:
       run: npx playwright test
       continue-on-error: true # Agar Allure tetap dibuat meski ada test yang gagal
 
+    - name: "Debug: List Allure Results"
+      run: ls -R allure-results # Perintah ini untuk melihat apakah ada file .json di sana
+
     # --- BAGIAN ALLURE REPORT DIMULAI DI SINI ---
     
     - name: Load Allure history
