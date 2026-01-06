@@ -1,8 +1,8 @@
 ![Playwright Tests](https://github.com/reynaldiakbarr/PlaywrightAutomation/actions/workflows/playwright.yml/badge.svg)
 
-# 📱 Mobile Web Automation with Playwright
+# 📱 Mobile and Web Automation with Playwright
 
-This project automates mobile web testing for both **iOS (iPhone 16)** and **Android (Samsung S25)** using Playwright. It features a CI/CD pipeline that runs tests automatically on every push.
+This project automates mobile web testing for both **iOS** and **Android** using Playwright. It features a CI/CD pipeline that runs tests automatically on every push.
 
 ## 🚀 Key Features
 * **Cross-Platform Testing:** Runs tests on emulated WebKit (iOS) and Chromium (Android).
