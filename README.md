@@ -1,6 +1,6 @@
 ![Playwright Tests](https://github.com/reynaldiakbarr/PlaywrightAutomation/actions/workflows/playwright.yml/badge.svg)
 
-# 📱 Mobile and Web Automation with Playwright
+# 🎭 Mobile and Web Automation with Playwright
 
 * **Goal:** Automate the end-to-end user journey (Login -> Add to Cart -> Checkout).
 This project automates mobile web testing for both **iOS** and **Android** using Playwright. It features a robust CI/CD pipeline that executes tests, generates comprehensive Allure Reports, and sends real-time updates to Telegram.
@@ -31,3 +31,19 @@ You can view the evidence of telegram notification here:
    ```bash
    git clone [https://github.com/reynaldiakbarr/PlaywrightAutomation.git](https://github.com/reynaldiakbarr/PlaywrightAutomation.git)
    cd PlaywrightAutomation
+
+2. **Install Dependencies:**
+   ```bash
+   npm install
+   npx playwright install
+
+3. **Run all tests:**
+   ```bash
+   npx playwright test
+
+## ⚙️ CI/CD Pipeline
+* **The workflow is defined in .github/workflows/playwright.yml and includes:**
+* **Dependency and browser installation.**
+* **Test execution using GitHub Secrets for sensitive credentials.**
+* **Artifact uploading (videos, traces, and screenshots).**
+* **Automated generation and publication of the Allure Report to GitHub Pages.**
